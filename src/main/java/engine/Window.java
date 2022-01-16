@@ -3,6 +3,7 @@ package engine;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
+import util.Time;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -15,11 +16,19 @@ public class Window {
     private String title;
     private long glfwWindow;
 
+    public float r, g, b, a;
+
+    private static Scene currentScene;
+
     private static Window window = null;
 
     private Window() { //private, damit NIEMAND ein neues Window erstellen kann
         this.width = 1280;
         this.height = 720;
+        this.r = 1.0f;
+        this.g = 1.0f;
+        this.b = 1.0f;
+        this.a = 1.0f;
         this.title = "Engine";
     }
 
@@ -28,6 +37,22 @@ public class Window {
             Window.window = new Window();
         }
         return Window.window; //siehe Singleton
+    }
+
+    public static void changeScene(int sceneNumber) {
+        switch (sceneNumber) {
+            case 0:
+                currentScene = new LevelEditorScene();
+                //currentScene.init();
+                break;
+            case 1:
+                currentScene = new LevelScene();
+                //inti;
+                break;
+            default:
+                assert false : "Unknown scene '" + sceneNumber + "'";
+                break;
+        }
     }
 
     public void run() {
@@ -88,22 +113,32 @@ public class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+
+        Window.changeScene(0);
     }
 
     public void loop() {
+        float beginTime = Time.getTime();
+        float endTime = Time.getTime();
+        float dt = -1.0f;
+
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll all Events (keyboard, mouse, etc)
             glfwPollEvents();
 
-            glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+            glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (KeyListener.isKeyPressed(GLFW_KEY_E)){
-                System.out.println("Key E has been pressed");
+
+            if (dt >= 0) {
+                currentScene.update(dt);
             }
 
-
             glfwSwapBuffers(glfwWindow);
+
+            endTime = Time.getTime();
+            dt = endTime - beginTime;
+            beginTime = endTime;
         }
     }
 }
