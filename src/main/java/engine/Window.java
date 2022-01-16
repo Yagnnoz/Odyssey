@@ -43,11 +43,11 @@ public class Window {
         switch (sceneNumber) {
             case 0:
                 currentScene = new LevelEditorScene();
-                //currentScene.init();
+                currentScene.init();
                 break;
             case 1:
                 currentScene = new LevelScene();
-                //inti;
+                currentScene.init();
                 break;
             default:
                 assert false : "Unknown scene '" + sceneNumber + "'";
