@@ -114,7 +114,7 @@ public class LevelEditorScene extends Scene {
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
 
-        //create float buffer or verticies
+        //create float buffer or vertices
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertexArray.length);
         vertexBuffer.put(vertexArray).flip();
 
@@ -123,7 +123,7 @@ public class LevelEditorScene extends Scene {
         glBindBuffer(GL_ARRAY_BUFFER,vboID);
         glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
 
-        //create indicies and upload
+        //create indices and upload
         IntBuffer elementBuffer = BufferUtils.createIntBuffer(elementArray.length);
         elementBuffer.put(elementArray).flip();
 
@@ -153,7 +153,7 @@ public class LevelEditorScene extends Scene {
         glUseProgram(shaderProgram);
         //Bind VAO
         glBindVertexArray(vaoID);
-        //enable vertex attrbute pointers
+        //enable vertex attribute pointers
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
 
