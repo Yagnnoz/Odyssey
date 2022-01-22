@@ -17,17 +17,23 @@ public class Shader {
     public Shader(String filepath) {
         this.filepath = filepath;
         try {
+            //read full source code into source
             String source = new String(Files.readAllBytes(Paths.get(filepath)));
+            //split at #type $TYPE
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
-            int index = source.indexOf("#type") + 6; //index of next word
-            int eoL = source.indexOf("\r\n", index); //findet newline character nach "#type" und damit das Ende der Zeile
-            String firstPattern = source.substring(index, eoL).trim(); // hier steht dann entweder vertex oder fragment, je nachdem was zuerst in der Datei steht
+            //which word is after the first occurrence of "#type"? -> firstPattern
+            int index = source.indexOf("#type") + 6; //starting index of word after #type |+6: 5 for "#type" + space after that
+            int eoL = source.indexOf("\r\n", index); //first newline character (end of the word we are looking for)
+            String firstPattern = source.substring(index, eoL).trim(); // load the word we are looking for into the variable
 
-            index = source.indexOf("#type", eoL) + 6; //index verschieben zum zweiten Shader
-            eoL = source.indexOf("\r\n", index); //s.o.
-            String secondPattern = source.substring(index, eoL).trim(); //hier steht dann entweder vertex oder fragment, je nachdem was als zweiter Block in der Datei ist
+            //which word is after the second occurrence of "#type"? -> secondPattern
+            //works as above. only difference: this one starts at the second occurrence of #type
+            index = source.indexOf("#type", eoL) + 6;
+            eoL = source.indexOf("\r\n", index);
+            String secondPattern = source.substring(index, eoL).trim();
 
+            //load first shader code in correct variable
             if (firstPattern.equals("vertex")) {
                 vertexSource = splitString[1];
             } else if (firstPattern.equals("fragment")) {
@@ -36,6 +42,7 @@ public class Shader {
                 throw new IOException("Unexpected token: '" + firstPattern);
             }
 
+            //load second shader code in correct variable
             if (secondPattern.equals("vertex")) {
                 vertexSource = splitString[2];
             } else if (secondPattern.equals("fragment")) {
