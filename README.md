@@ -1,2 +1,3 @@
 # Odyssey
- 2D Java Game Engine
+ 
+ Trying to create a 2D game in Java.
